@@ -45,3 +45,9 @@ Cria o aplicativo para produção na pasta de build
 ```
 $ yarn build
 ```
+
+## Documentação
+
+A documentação da API pode ser acessada em:
+
+[API Back-end](https://github.com/GabCardoso/Dona)
