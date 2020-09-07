@@ -27,7 +27,7 @@ export const AuthProvider = ({ bootstrap, onLogin, onLogout, children }) => {
   const logout = () => onLogout().then(setData)
 
   const value = {
-    eu: data,
+    userAuthenticated: data,
     login,
     logout,
   }

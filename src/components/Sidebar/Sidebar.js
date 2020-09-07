@@ -37,8 +37,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 
+  listItemLogo: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+
   logotipo: {
-    height: '2rem',
+    height: '4rem',
   },
 }))
 
@@ -71,7 +76,7 @@ const Sidebar = memo(({ open, onOpen, routes }) => {
       onClose={() => onOpen(!open)}
     >
       <List>
-        <ListItem>
+        <ListItem className={classes.listItemLogo}>
           <img src={logo} alt="Dona" className={classes.logotipo} />
         </ListItem>
 

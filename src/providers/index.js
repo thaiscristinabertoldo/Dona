@@ -1,53 +1,59 @@
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 
 import { BrowserRouter } from 'react-router-dom'
 
-// import { AuthProvider } from './auth'
 import { SnackbarProvider } from 'react-snackbar-alert'
+
 import CssBaseline from '@material-ui/core/CssBaseline'
 
-// // adiciona token de autorização
-// http.interceptors.request.use(function(config) {
-//   const token = authService.getToken()
+import http from 'api'
 
-//   if (token) {
-//     config.headers['Authorization'] = `Bearer ${token}`
-//   }
+import * as authService from 'services/auth'
 
-//   return config
-// })
+import { AuthProvider } from './auth'
 
-// // verifica quando ocorrer erro de autenticação
-// http.interceptors.response.use(
-//   function(response) {
-//     return response
-//   },
+// adiciona token de autorização
+http.interceptors.request.use(function (config) {
+  const token = authService.getToken()
 
-//   function(error) {
-//     console.log('http error: ', error)
-//     return Promise.reject(error)
-//   }
-// )
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`
+  }
+
+  return config
+})
+
+// verifica quando ocorrer erro de autenticação
+http.interceptors.response.use(
+  function (response) {
+    return response
+  },
+
+  function (error) {
+    console.log('http error: ', error)
+    return Promise.reject(error)
+  }
+)
 
 const Providers = ({ children }) => {
-  // useLayoutEffect(() => {
-  //   const params = new URLSearchParams(window.location.search)
+  useLayoutEffect(() => {
+    const params = new URLSearchParams(window.location.search)
 
-  //   const token = params.get('token')
+    const token = params.get('token')
 
-  //   if (token) {
-  //     authService.setToken(token)
-  //   }
+    if (token) {
+      authService.setToken(token)
+    }
 
-  //   window.history.replaceState({}, document.title, `${window.location.origin}${window.location.pathname}`)
-  // }, [])
+    window.history.replaceState({}, document.title, `${window.location.origin}${window.location.pathname}`)
+  }, [])
 
   return (
     <SnackbarProvider position="bottom" progressBar={false}>
       <CssBaseline />
-      {/* <AuthProvider bootstrap={authService.bootstrap} onLogin={authService.login} onLogout={authService.logout}> */}
-      <BrowserRouter>{children}</BrowserRouter>
-      {/* </AuthProvider> */}
+      <AuthProvider bootstrap={authService.bootstrap} onLogin={authService.login} onLogout={authService.logout}>
+        <BrowserRouter>{children}</BrowserRouter>
+      </AuthProvider>
     </SnackbarProvider>
   )
 }

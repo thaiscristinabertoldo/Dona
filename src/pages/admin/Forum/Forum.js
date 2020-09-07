@@ -1,4 +1,6 @@
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react'
+
+import { useAsync } from 'react-async'
 
 import { Formik, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
@@ -7,6 +9,13 @@ import * as Yup from 'yup'
 import { Container, Box, Typography, makeStyles, Paper, Grid, CircularProgress, Fab, Divider } from '@material-ui/core'
 
 import AddIcon from '@material-ui/icons/Add'
+
+import * as forumsApi from 'api/forums'
+
+import { useSnackbar } from 'utils'
+
+import { useAuth } from 'providers/auth'
+
 import ForumList from './ForumList'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,6 +37,18 @@ const Forum = memo(() => {
 
   const [forums, setForums] = useState([])
 
+  const { userAuthenticated } = useAuth()
+
+  const { createSnackbar } = useSnackbar()
+
+  const { data: forumsData, isLoading, isFulfilled } = useAsync(forumsApi.listAllForums)
+
+  useEffect(() => {
+    if (isFulfilled) {
+      setForums(forumsData)
+    }
+  }, [isFulfilled, forumsData])
+
   const validationSchema = useMemo(() => {
     return Yup.object({
       subject: Yup.string().required('Informe o assunto'),
@@ -35,22 +56,32 @@ const Forum = memo(() => {
   }, [])
 
   const onSubmit = useCallback(
-    (values, formik) => {
-      const newForum = {
-        id: forums.length + 1,
-        subject: values.subject,
-        user: {
-          name: 'Maria',
-          image: 'https://source.unsplash.com/mEZ3PoFGs_k',
-        },
-        discussion: [],
-      }
-
-      setForums((oldForums) => [...oldForums, newForum])
-      formik.setSubmitting(false)
-      formik.resetForm({})
+    (values, { setSubmitting, resetForm }) => {
+      forumsApi
+        .createForum({
+          nome: values.subject,
+          descricao: '',
+          usuariaId: userAuthenticated.id,
+        })
+        .then((res) => {
+          createSnackbar({
+            message: 'Fórum adicionado com sucesso!',
+            theme: 'success',
+          })
+          resetForm({})
+          setForums((oldForums) => [...oldForums, res])
+        })
+        .catch((e) => {
+          createSnackbar({
+            message: e.response && e.response.data ? e.response.data.message : e,
+            theme: 'error',
+          })
+        })
+        .finally(() => {
+          setSubmitting(false)
+        })
     },
-    [forums.length]
+    [createSnackbar, userAuthenticated.id]
   )
 
   return (
@@ -106,6 +137,8 @@ const Forum = memo(() => {
               )}
             </Formik>
           </Box>
+
+          {isLoading && <CircularProgress />}
 
           {forums && forums.length > 0 ? (
             <>

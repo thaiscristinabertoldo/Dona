@@ -20,6 +20,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import logo from 'assets/logo.svg'
 
+import { useAuth } from 'providers/auth'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -31,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   logotipo: {
-    height: '2rem',
+    height: '2.5rem',
   },
 }))
 
@@ -39,6 +41,8 @@ export const Navbar = memo(({ onClickMenu }) => {
   const classes = useStyles()
 
   const history = useHistory()
+
+  const { logout } = useAuth()
 
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -57,12 +61,10 @@ export const Navbar = memo(({ onClickMenu }) => {
 
   const handleLogout = useCallback(() => {
     handleClose()
-    history.push('/auth/login')
-    // TODO: adicionar chamada logout
-    // logout().then(() => {
-    //   history.push('/auth/login')
-    // })
-  }, [history])
+    logout().then(() => {
+      history.push('/auth/login')
+    })
+  }, [logout, history])
 
   return (
     <AppBar position="static">

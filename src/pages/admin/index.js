@@ -12,6 +12,7 @@ import theme from 'theme/theme'
 import AdminLayout from 'components/AdminLayout/AdminLayout'
 
 const Entrepreneurial = lazy(() => import('./Entrepreneurial/Entrepreneurial'))
+const EntrepreneurialDetail = lazy(() => import('./Entrepreneurial/EntrepreneurialDetail'))
 const Profile = lazy(() => import('./Profile/Profile'))
 const Forum = lazy(() => import('./Forum/Forum'))
 
@@ -21,7 +22,8 @@ const Admin = () => {
       <Suspense fallback={<CircularProgress />}>
         <AdminLayout routes={routes}>
           <Switch>
-            <Route path="/admin/entrepreneurial" component={Entrepreneurial} />
+            <Route path="/admin/entrepreneurial" exact component={Entrepreneurial} />
+            <Route path="/admin/entrepreneurial/:id" component={EntrepreneurialDetail} />
             <Route path="/admin/forum" component={Forum} />
             <Route path="/admin/profile" component={Profile} />
 

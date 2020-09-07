@@ -2,21 +2,21 @@ import React, { lazy, Suspense, useMemo } from 'react'
 
 import CircularProgress from '@material-ui/core/CircularProgress'
 
+import { useAuth } from 'providers/auth'
+
 const Auth = lazy(() => import('pages/auth'))
 const Admin = lazy(() => import('pages/admin'))
 
 const App = () => {
-  // const { eu } = useAuth()
-
-  const eu = true
+  const { userAuthenticated } = useAuth()
 
   const Component = useMemo(() => {
-    if (!eu) {
+    if (!userAuthenticated) {
       return Auth
     }
 
     return Admin
-  }, [eu])
+  }, [userAuthenticated])
 
   return (
     <Suspense fallback={<CircularProgress />}>

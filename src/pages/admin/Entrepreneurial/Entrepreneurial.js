@@ -1,10 +1,24 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 
-import { Container, Box, Typography, makeStyles, Paper, InputBase, IconButton } from '@material-ui/core'
+import { useAsync } from 'react-async'
+
+import {
+  Container,
+  Box,
+  Typography,
+  makeStyles,
+  Paper,
+  InputBase,
+  IconButton,
+  CircularProgress,
+} from '@material-ui/core'
 
 import SearchIcon from '@material-ui/icons/Search'
 
-import { VerticalList } from 'components/VerticalList'
+import { useDebounce } from 'use-lodash-debounce'
+
+import * as usersApi from 'api/users'
+import { EntrepreneurialList } from './EntrepreneurialList'
 
 const useStyles = makeStyles((theme) => ({
   boxHeader: {
@@ -65,67 +79,70 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const deliverToday = [
-  {
-    id: '1',
-    name: 'Maria Júlia Gomes',
-    city: 'Pato Branco, PR',
-    bio: 'Apaixonada por educação e tecnologia...',
-    phoneNumber: '5546988041760',
-    image: 'https://source.unsplash.com/mEZ3PoFGs_k',
-  },
-  {
-    id: '2',
-    name: 'Ana Clara Dias',
-    city: 'São Paulo, SP',
-    conquest: 'Menores preços',
-    bio: 'Apaixonada por direitos humanos e tecnologia...',
-    phoneNumber: '5546988041760',
-    image: 'https://source.unsplash.com/0-ntnQI3NUc',
-  },
-  {
-    id: '3',
-    name: 'Marina Letier',
-    city: 'Brasília, DF',
-    bio: 'Apaixonada por artes plásticas e tecnologia...',
-    phoneNumber: '5546988041760',
-    image: 'https://source.unsplash.com/Iex31-cnO-o',
-  },
-]
-
 const Entrepreneurial = memo(() => {
   const classes = useStyles()
 
-  const [, setFilter] = useState()
+  const [users, setUsers] = useState()
+  const [filter, setFilter] = useState()
+
+  const { data: dataUsers, isLoading, isFulfilled } = useAsync(usersApi.listAllUsers)
+
+  const debouncedFilter = useDebounce(filter, 500)
+
+  useEffect(() => {
+    if (isFulfilled) {
+      setUsers(dataUsers)
+    }
+  }, [isFulfilled, dataUsers])
+
+  useEffect(
+    () => {
+      if (filter) {
+        const userFilter = dataUsers.filter((user) => {
+          return user.nome.toLowerCase().includes(filter.toLowerCase())
+        })
+
+        return setUsers(userFilter)
+      }
+      return setUsers(dataUsers)
+    }, // eslint-disable-next-line
+    [debouncedFilter]
+  )
 
   return (
-    <Container>
-      <Box className={classes.boxHeader}>
-        <Typography className={classes.title} variant="h5">
-          Seja bem vinda!
-        </Typography>
-        <Typography className={classes.subtitle} variant="h6">
-          Conheça mulheres incríveis com os mesmos ideais que os seus!
-        </Typography>
-      </Box>
+    <>
+      {isLoading && <CircularProgress />}
 
-      <Box>
-        <Paper className={classes.root}>
-          <InputBase
-            className={classes.input}
-            placeholder="Buscar empreendedoras..."
-            onChange={(e) => setFilter(e.target.value)}
-          />
-          <IconButton className={classes.iconButton} disabled>
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-      </Box>
+      <Container>
+        <Box className={classes.boxHeader}>
+          <Typography className={classes.title} variant="h5">
+            Seja bem vinda!
+          </Typography>
+          <Typography className={classes.subtitle} variant="h6">
+            Conheça mulheres incríveis com os mesmos ideais que os seus!
+          </Typography>
+        </Box>
 
-      <Box className={classes.boxList}>
-        <VerticalList items={deliverToday} />
-      </Box>
-    </Container>
+        <Box>
+          <Paper className={classes.root}>
+            <InputBase
+              className={classes.input}
+              placeholder="Buscar empreendedoras..."
+              onChange={(e) => setFilter(e.target.value)}
+            />
+            <IconButton className={classes.iconButton} disabled>
+              <SearchIcon />
+            </IconButton>
+          </Paper>
+        </Box>
+
+        {users && (
+          <Box className={classes.boxList}>
+            <EntrepreneurialList items={users} />
+          </Box>
+        )}
+      </Container>
+    </>
   )
 })
 

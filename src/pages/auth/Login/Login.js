@@ -1,18 +1,16 @@
 import React, { memo, useMemo, useCallback } from 'react'
 
 import { useHistory } from 'react-router'
-// import { useAuth } from '../../../providers/auth'
-// import { useSnackbar } from '../../../utils/hooks/useSnackbar'
 
 import { Formik, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 
-import { Avatar, Button, CircularProgress, Grid, makeStyles } from '@material-ui/core'
-
-import LockIcon from '@material-ui/icons/Lock'
+import { Button, CircularProgress, Grid, makeStyles } from '@material-ui/core'
 
 import { HeaderAuth } from 'components/HeaderAuth'
+import { useAuth } from 'providers/auth'
+import { useSnackbar } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -46,41 +44,39 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Login = memo(() => {
-  // const { login } = useAuth()
-  // const { createSnackbar } = useSnackbar()
+  const { login } = useAuth()
+  const { createSnackbar } = useSnackbar()
   const classes = useStyles()
   const history = useHistory()
 
   const validationSchema = useMemo(() => {
     return Yup.object({
       email: Yup.string().email('E-mail inválido').required('Informe o e-mail'),
-      senha: Yup.string().required('Informe a senha').min(8, 'Mínimo 8 caracteres'),
+      senha: Yup.string().required('Informe a senha'),
     })
   }, [])
 
-  const handleSubmit = useCallback((values, formik) => {
-    // login(values).catch((e) => {
-    //   if (e.response) {
-    //     formik.setFieldError('senha', e.response ? e.response.data.message : e)
-    //   } else {
-    //     createSnackbar({
-    //       message: 'Falha na comunicação com o servidor',
-    //       theme: 'error',
-    //       pauseOnHover: true,
-    //     })
-    //   }
-
-    // })
-    formik.setSubmitting(false)
-  }, [])
+  const handleSubmit = useCallback(
+    (values, formik) => {
+      login(values).catch((e) => {
+        if (e.response) {
+          formik.setFieldError('senha', e.response ? e.response.data.message : e)
+        } else {
+          createSnackbar({
+            message: 'Falha na comunicação com o servidor',
+            theme: 'error',
+            pauseOnHover: true,
+          })
+        }
+      })
+      formik.setSubmitting(false)
+    },
+    [login, createSnackbar]
+  )
 
   return (
     <div className={classes.divCard}>
-      <HeaderAuth title="Login" icon={LockIcon}>
-        <Avatar className={classes.avatar}>
-          <LockIcon />
-        </Avatar>
-      </HeaderAuth>
+      <HeaderAuth title="Login" />
 
       <div className={classes.cardContainer}>
         <Formik onSubmit={handleSubmit} validationSchema={validationSchema} initialValues={{ email: '', senha: '' }}>

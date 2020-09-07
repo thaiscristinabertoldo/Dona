@@ -6,9 +6,7 @@ import { Formik, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 
-import { Avatar, Button, CardContent, CircularProgress, Grid, makeStyles } from '@material-ui/core'
-
-import EnhancedEncryptionIcon from '@material-ui/icons/EnhancedEncryption'
+import { Button, CardContent, CircularProgress, Grid, makeStyles } from '@material-ui/core'
 
 import { HeaderAuth } from 'components/HeaderAuth'
 
@@ -76,11 +74,7 @@ const RecoverPassword = memo(() => {
 
   return (
     <div className={classes.divCard}>
-      <HeaderAuth title="Recuperar senha">
-        <Avatar className={classes.avatar}>
-          <EnhancedEncryptionIcon />
-        </Avatar>
-      </HeaderAuth>
+      <HeaderAuth title="Recuperar senha" />
 
       <CardContent className={classes.cardContainer}>
         <Formik onSubmit={handleSubmit} validationSchema={validationSchema} initialValues={{ email: '' }}>

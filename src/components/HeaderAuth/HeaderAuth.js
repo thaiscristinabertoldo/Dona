@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
   logotipo: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
-    maxHeight: '50px',
+    maxHeight: '6rem',
   },
   title: {
     color: theme.palette.grey.fullDark,
@@ -18,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const HeaderAuth = ({ title, children }) => {
+export const HeaderAuth = ({ title }) => {
   const classes = useStyles()
 
   return (
     <>
       <img src={logo} alt="Dona" className={classes.logotipo} />
-      {children}
+
       <Typography className={classes.title}>{title}</Typography>
     </>
   )
