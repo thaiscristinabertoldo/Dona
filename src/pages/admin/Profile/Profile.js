@@ -63,7 +63,7 @@ const Profile = memo(() => {
             telefone: values.telefone,
             uf: values.uf,
             profissao: values.profissao,
-            senha: values.senha !== '' ? values.senha : user.senha,
+            senha: values.senha,
           },
         })
         .then(() => {
@@ -83,7 +83,7 @@ const Profile = memo(() => {
           setSubmitting(false)
         })
     },
-    [createSnackbar, userAuthenticated.id, user.senha]
+    [createSnackbar, userAuthenticated.id]
   )
   return (
     <Container>
