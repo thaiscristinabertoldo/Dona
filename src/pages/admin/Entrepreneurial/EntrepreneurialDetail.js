@@ -9,28 +9,27 @@ import {
   Card,
   CardContent,
   CardActions,
-  Tooltip,
-  IconButton,
   CardActionArea,
   Button,
   CircularProgress,
 } from '@material-ui/core'
 
-import FavoriteIcon from '@material-ui/icons/Favorite'
+import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined'
 
 import * as usersApi from 'api/users'
 
-import theme from 'theme/theme'
 import whatsapp from 'assets/whatsapp.svg'
 import { useParams, useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   main: {
-    margin: theme.spacing(4, 40),
     padding: theme.spacing(4),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      margin: theme.spacing(4, 40),
+    },
   },
 
   img: {
@@ -59,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const WhatsAppIcon = memo(() => {
-  return <img src={whatsapp} alt="WhatsApp" width="30px" />
+  return <img src={whatsapp} alt="WhatsApp" width="25px" />
 }, [])
 
 const EntrepreneurialDetail = memo(() => {
@@ -105,28 +104,23 @@ const EntrepreneurialDetail = memo(() => {
           </Box>
 
           <CardActions className={classes.boxActions}>
-            <Button variant="outlined" onClick={() => history.push('/admin/entrepreneurial')}>
-              Voltar
-            </Button>
+            <Box className={classes.boxWhatsApp}>
+              <Button
+                variant="outlined"
+                onClick={() => history.push('/admin/entrepreneurial')}
+                startIcon={<ArrowBackIosOutlinedIcon />}
+              >
+                Voltar
+              </Button>
+            </Box>
 
             <Box className={classes.boxWhatsApp}>
               <a href={formatWhatsAppLink(user.telefone, user.nome)} rel="noopener noreferrer" target="_blank">
                 <Button fullWidth variant="outlined" startIcon={<WhatsAppIcon />}>
-                  Enviar mensagem
+                  Conversar
                 </Button>
               </a>
             </Box>
-
-            <Tooltip title={'Seguir'}>
-              <IconButton
-                component="div"
-                onClick={() => {
-                  console.log('seguir')
-                }}
-              >
-                <FavoriteIcon style={{ color: theme.palette.red.main }} />
-              </IconButton>
-            </Tooltip>
           </CardActions>
         </Card>
       )}
