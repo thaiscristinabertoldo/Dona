@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { Button, CardContent, CircularProgress, Grid, makeStyles } from '@material-ui/core'
 
 import { HeaderAuth } from 'components/HeaderAuth'
+import { useSnackbar } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -39,32 +40,23 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const RecoverPassword = memo(() => {
+  const { createSnackbar } = useSnackbar()
+
   const classes = useStyles()
   const history = useHistory()
 
-  const handleSubmit = useCallback((values, { setSubmitting, resetForm }) => {
-    //   loginApi
-    //     .recuperarSenha({ email: values.email })
-    //     .then(res => {
-    //       createSnackbar({
-    //         message: 'E-mail enviado com sucesso!',
-    //         theme: 'success',
-    //         pauseOnHover: true
-    //       })
-    //       resetForm(values)
-    //       history.push('/auth/login')
-    //     })
-    //     .catch(e => {
-    //       createSnackbar({
-    //         message: e.response.data ? e.response.data.message : e,
-    //         theme: 'error',
-    //         pauseOnHover: true
-    //       })
-    //     })
-    //     .finally(() => {
-    //     })
-    setSubmitting(false)
-  }, [])
+  const handleSubmit = useCallback(
+    (values, { setSubmitting, resetForm }) => {
+      createSnackbar({
+        message: 'Em desenvolvimento',
+        theme: 'error',
+        pauseOnHover: true,
+      })
+      resetForm({})
+      setSubmitting(false)
+    },
+    [createSnackbar]
+  )
 
   const validationSchema = useMemo(() => {
     return Yup.object({

@@ -35,6 +35,7 @@ const Profile = memo(() => {
     return Yup.object({
       nome: Yup.string().required('Informe o nome'),
       email: Yup.string().email('E-mail inválido').required('Informe o e-mail'),
+      profissao: Yup.string().required('Informe a profissão'),
       telefone: Yup.string().required('Informe o celular'),
     })
   }, [])
@@ -71,7 +72,7 @@ const Profile = memo(() => {
             message: 'Perfil atualizado com sucesso!',
             theme: 'success',
           })
-          resetForm(values)
+          resetForm({ values })
         })
         .catch((e) => {
           createSnackbar({
@@ -176,7 +177,14 @@ const Profile = memo(() => {
                       </Grid>
 
                       <Grid item xs={12}>
-                        <Field component={TextField} name="profissao" label="Profissão" variant="outlined" fullWidth />
+                        <Field
+                          component={TextField}
+                          name="profissao"
+                          label="Profissão"
+                          variant="outlined"
+                          fullWidth
+                          required
+                        />
                       </Grid>
 
                       <Grid item xs={12}>

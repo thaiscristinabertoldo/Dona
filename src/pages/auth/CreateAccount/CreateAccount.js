@@ -62,7 +62,7 @@ const CreateAccount = memo(() => {
             message: 'Usuária cadastrado com sucesso!',
             theme: 'success',
           })
-          resetForm(values)
+          resetForm({ values })
           history.push('/auth/login')
         })
         .catch((e) => {
@@ -83,6 +83,7 @@ const CreateAccount = memo(() => {
       nome: Yup.string().required('Informe o nome'),
       email: Yup.string().email('E-mail inválido').required('Informe o e-mail'),
       celular: Yup.string().required('Informe o celular'),
+      profissao: Yup.string().required('Informe a profissão'),
       senha: Yup.string().required('Informe a senha'),
     })
   }, [])
