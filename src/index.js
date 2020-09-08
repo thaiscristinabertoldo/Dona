@@ -6,11 +6,9 @@ import * as serviceWorker from './serviceWorker'
 import Providers from 'providers'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Providers>
-      <App />
-    </Providers>
-  </React.StrictMode>,
+  <Providers>
+    <App />
+  </Providers>,
   document.getElementById('root')
 )
 

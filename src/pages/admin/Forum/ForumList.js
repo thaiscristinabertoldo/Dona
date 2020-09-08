@@ -147,7 +147,7 @@ const ForumList = memo(({ forum }) => {
         discussions.length > 0 &&
         discussions.map((discussion) => {
           return (
-            <Box className={classes.discussion}>
+            <Box key={discussion.id} className={classes.discussion}>
               <Box className={classes.boxLogo}>
                 <Avatar className={classes.avatar}>
                   <img
